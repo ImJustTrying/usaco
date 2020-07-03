@@ -39,14 +39,15 @@ def to_base(num, base):
   # = floor(1.58) = 1, 2^1 = 2 and the 2's place has the most significant digit
   base_exponent = floor(log(num, base))
   converted = ""
+  value = num
   while base_exponent >= 0:
     place_unit = int(base ** base_exponent)
-    multiplier = int((num - (num % place_unit)) / place_unit)
+    multiplier = int((value - (value % place_unit)) / place_unit)
     if multiplier >= 10:
       converted += chr(ord("A") - 10 + multiplier)
     else:
       converted += str(multiplier)
-    num %= place_unit
+    value %= place_unit
     base_exponent -= 1
   return converted
 
@@ -56,12 +57,13 @@ num = s + 1
 while len(palindromes) < n:
   pal_count = 0
   for base in range(2, 11):
-    if pal_count >= 2:
-      palindromes.append(num)
-      break
+    # print("{} in base {}: {}".format(num, base, to_base(num, base)))
     if is_palindrome(to_base(num, base)):
-      pal_count = pal_count + 1
-  num = num + 1
+      pal_count += 1
+      if pal_count >= 2:
+        palindromes.append(num)
+        break
+  num += 1
 
 with open("dualpal.out", "w") as fio:
   for i in range(len(palindromes)):
